@@ -30,27 +30,29 @@
 --(4) 2020년 7월 4일~7월 7일 사이에 주문 받은 도서의 주문번호
     select orderid "주문번호"
       from orders
-     where orderdate between '20200704' and '20200707';
+     where orderdate between TO_DATE('2020-07-04', 'YYYY-MM-DD') 
+                         and TO_DATE('2020-07-07', 'YYYY-MM-DD');
 
     select orderid "주문번호"
       from orders
-     where orderdate >= '20200704' 
-       and orderdate <= '20200707';
+     where orderdate >= TO_DATE('2020-07-04', 'YYYY-MM-DD') 
+       and orderdate <= TO_DATE('2020-07-07', 'YYYY-MM-DD');
      
 --(5) 2020년 7월 4일~7월 7일 사이에 주문 받은 도서를 제외한 도서의 주문번호
     select orderid "주문번호"
       from orders
-     where orderdate not between '20200704' and '20200707';
+     where orderdate not between TO_DATE('2020-07-04', 'YYYY-MM-DD') 
+                             and TO_DATE('2020-07-07', 'YYYY-MM-DD');
 
     select orderid "주문번호"
       from orders
-     where not(orderdate >= '20200704' 
-       and orderdate <= '20200707');
+     where not(orderdate >= TO_DATE('2020-07-04', 'YYYY-MM-DD') 
+       and orderdate <= TO_DATE('2020-07-07', 'YYYY-MM-DD'));
        
     select orderid "주문번호"
       from orders
-     where orderdate < '20200704' 
-        or orderdate > '20200707';       
+     where orderdate < TO_DATE('2020-07-04', 'YYYY-MM-DD') 
+        or orderdate > TO_DATE('2020-07-07', 'YYYY-MM-DD');       
         
 --(6) 성이 ‘김’ 씨인 고객의 이름과 주소
     select name "이름", address "주소"
