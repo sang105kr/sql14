@@ -79,16 +79,64 @@
 	                       FROM ORDERS t2
 											  WHERE t1.custid = t2.custid );
 
+--case3) left outer join
+	SELECT t1.name
+	  FROM customer t1 LEFT OUTER JOIN orders t2 ON t1.custid = t2.custid
+	 WHERE t2.orderid IS NULL;
+
 --(9) 주문 금액의 총액과 주문의 평균 금액
-
-
+	SELECT sum(SALEPRICE) "총액", avg(SALEPRICE) "평균", sum(SALEPRICE)/count(*) "평균2"
+	  FROM orders;
+	  
 --(10) 고객의 이름과 고객별 구매액
+--case1)
+	SELECT t1.name, sum(t2.SALEPRICE)
+	  FROM customer t1 INNER JOIN orders t2 ON t1.custid = t2.custid
+GROUP BY t1.custid, t1.name;	  
 
+--case2)
+	SELECT (SELECT name 
+	          FROM customer 
+	         WHERE custid=t1.custid) "이름", sum(t2.SALEPRICE) "구매액"
+	  FROM customer t1 INNER JOIN orders t2 ON t1.custid = t2.custid
+GROUP BY t1.custid;	  
 
 --(11) 고객의 이름과 고객이 구매한 도서 목록
-
+	SELECT t1.name, t3.BOOKNAME
+	  FROM customer t1 INNER JOIN	orders t2 On t1.custid = t2.custid
+	                   INNER JOIN	book t3   ON t2.bookid = t3.bookid;
 
 --(12) 도서의 가격(Book 테이블)과 판매가격(Orders 테이블)의 차이가 가장 많은 주문
-
+	SELECT t2.orderid "주문번호"
+	  FROM book t1 INNER JOIN orders t2 ON t1.bookid = t2.bookid
+   WHERE (t1.price-t2.saleprice) = ( 	SELECT max(t1.price - t2.saleprice)
+																			  FROM book t1 INNER JOIN orders t2 ON t1.bookid = t2.bookid );
 
 --(13) 도서의 판매액 평균보다 자신의 구매액 평균이 더 높은 고객의 이름
+-- 도서 판매액 평균
+SELECT avg(SALEPRICE)
+  FROM orders;
+-- 자신의 구매액
+  SELECT custid, avg(saleprice)
+    FROM orders
+GROUP by custid;
+  
+  SELECT custid, avg(saleprice)
+    FROM orders
+GROUP by custid
+  HAVING avg(saleprice) > (SELECT avg(SALEPRICE)
+													   FROM orders ); 
+--case1)
+  SELECT (SELECT name 
+  					FROM customer 
+  			 	 WHERE custid=t1.custid ) "고객이름"
+    FROM orders t1
+GROUP by custid
+  HAVING avg(saleprice) > (SELECT avg(SALEPRICE));
+  
+--case2)  
+  SELECT t2.name
+    FROM orders t1 INNER JOIN customer t2 ON t1.custid = t2.custid
+GROUP by t1.custid
+  HAVING avg(t1.saleprice) > (SELECT avg(SALEPRICE)  
+													      FROM orders ); 
