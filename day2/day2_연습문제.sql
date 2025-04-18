@@ -131,12 +131,13 @@ GROUP by custid
   					FROM customer 
   			 	 WHERE custid=t1.custid ) "고객이름"
     FROM orders t1
-GROUP by custid
-  HAVING avg(saleprice) > (SELECT avg(SALEPRICE));
+GROUP by t1.custid
+  HAVING avg(t1.saleprice) > (SELECT avg(SALEPRICE)
+                                FROM orders);
   
 --case2)  
   SELECT t2.name
     FROM orders t1 INNER JOIN customer t2 ON t1.custid = t2.custid
-GROUP by t1.custid
+GROUP by t2.custid, t2.name
   HAVING avg(t1.saleprice) > (SELECT avg(SALEPRICE)  
 													      FROM orders ); 
