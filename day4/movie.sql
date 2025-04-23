@@ -168,8 +168,27 @@ GROUP BY m.GENRE
 --6.위의 쿼리말고 필요로하는 쿼리문을 3건 작성합니다. (SQL문이 아닌 한글질의문)
 
 --7.예약이 한건도 없는 영화 제목은?
-
-
+	--case1) 상관쿼리
+	SELECT m.title
+	  FROM MOVIES m 
+	 WHERE NOT EXISTS (SELECT *
+	                     FROM RESERVATIONS r 
+	                    WHERE r.MOVIE_ID = m.MOVIE_ID )  ;
+	--case2) left outer join
+	SELECT m.title
+	  FROM movies m LEFT OUTER JOIN RESERVATIONS r ON m.MOVIE_ID = r.MOVIE_ID
+   WHERE r.reservation_id IS null;
+	  
+  --case3) 차집합
+	SELECT m.title
+	  FROM movies m
+  MINUS
+	SELECT m.title
+    FROM MOVIES m 
+   WHERE EXISTS (SELECT *
+                   FROM RESERVATIONS r 
+                  WHERE r.MOVIE_ID = m.MOVIE_ID ) ;
+  
 --8.예약을 한번도 하지 않은 고객이름?
 
 

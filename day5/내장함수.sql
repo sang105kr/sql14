@@ -154,3 +154,8 @@ SELECT CASE
 				END "분류" 					
   FROM book;w
 
+
+ SELECT NULLIF(price,7000)
+   FROM book
+   
+  
