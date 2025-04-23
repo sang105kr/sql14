@@ -146,12 +146,11 @@ SELECT CASE credit
 				end "교양/선택/필수"
   FROM courses;
 
-SELECT 
-			 CASE  
+SELECT CASE  
 					WHEN price < 10000 THEN '저가'
 					WHEN price BETWEEN 10000 AND 30000 THEN '중가'
 					WHEN price > 30000 THEN '고가'
 					ELSE '기타'
 				END "분류" 					
-  FROM book;
+  FROM book;w
 
