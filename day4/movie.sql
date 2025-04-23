@@ -120,6 +120,60 @@ INSERT INTO RESERVATIONS
 		 VALUES(RESERVATIONS_RESERVATION_ID_SEQ.NEXTVAL,5,2,2,TO_DATE('2024-12-24','YYYY-MM-DD'),1700,'E1');
 COMMIT;
 
+--1.영화 테이블의 개봉일 컬럼을 사용하여 현재 상영 중인 영화를 찾는 쿼리를 작성합니다.
+	SELECT *
+	  FROM MOVIES m 
+	 WHERE m.RELEASE_DATE  <= sysdate;
+
+	SELECT *
+	  FROM MOVIES m 
+	 WHERE m.RELEASE_DATE  <= to_date('2025-01-03','YYYY-MM-DD');
+
+--2.극장 테이블에서 특정 위치에 있는 극장을 찾고, 해당 극장에서 상영하는 영화 목록을 가져오는 쿼리를 작성합니다.
+	--case1)
+	SELECT *
+	  FROM MOVIES m 
+   WHERE m.movie_id IN (	SELECT r.MOVIE_ID
+													  FROM RESERVATIONS r 
+													 WHERE r.THEATER_ID IN ( SELECT t.THEATER_ID
+																								 	   FROM THEATERS t 
+												  	                        WHERE t.LOCATION ='위치1')) ;
+
+	--case2)
+		SELECT DISTINCT m.*
+		  FROM RESERVATIONS r INNER JOIN THEATERS t ON r.THEATER_ID = t.THEATER_ID
+		  										INNER JOIN MOVIES m   ON r.MOVIE_ID = m.MOVIE_ID
+ 		 WHERE t.LOCATION = '위치1';		  										
+
+--3.예약 테이블을 사용하여 특정 고객의 예약 내역과 예약한 영화의 정보를 함께 제공하는 쿼리를 작성합니다.	
+		SELECT c.CUSTOMER_NAME , m.TITLE
+		  FROM RESERVATIONS r INNER JOIN CUSTOMERS c ON r.CUSTOMER_ID = c.CUSTOMER_ID
+		  										INNER JOIN MOVIES m 	 ON r.MOVIE_ID    = m.MOVIE_ID
+		 WHERE c.CUSTOMER_NAME = '홍길동2';
+	
+--4.예약과 극장을 조인하여, 각 극장별로 예약된 좌석 수를 계산하는 쿼리를 작성합니다.
+		SELECT t.THEATER_NAME "극장명", count(*) "예약 좌석수"
+		  FROM RESERVATIONS r INNER JOIN THEATERS t ON r.THEATER_ID = t.THEATER_ID
+  GROUP BY t.THEATER_ID,t.THEATER_NAME;
+
+--5.가장 인기 있는 영화 장르를 결정하는 쿼리를 작성합니다. (예: 예약 수 기준)
+  SELECT m.GENRE "장르", count(*) "예약건수"
+    FROM RESERVATIONS r INNER JOIN MOVIES m ON r.MOVIE_ID = m.MOVIE_ID
+GROUP BY m.GENRE
+	HAVING count(*) = ( SELECT max(cnt)
+											  FROM (	SELECT m.GENRE , count(*) cnt
+													      	FROM RESERVATIONS r INNER JOIN MOVIES m ON r.MOVIE_ID = m.MOVIE_ID
+											      	GROUP BY m.GENRE) t1 );
+     
+--6.위의 쿼리말고 필요로하는 쿼리문을 3건 작성합니다. (SQL문이 아닌 한글질의문)
+
+--7.예약이 한건도 없는 영화 제목은?
+
+
+--8.예약을 한번도 하지 않은 고객이름?
+
+
+
 
 
 
