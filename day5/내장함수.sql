@@ -152,10 +152,22 @@ SELECT CASE
 					WHEN price > 30000 THEN '고가'
 					ELSE '기타'
 				END "분류" 					
-  FROM book;w
+  FROM book;
 
-
+ SELECT price
+   FROM book
+   
  SELECT NULLIF(price,7000)
    FROM book
    
   
+   
+SELECT * 
+  FROM customer
+ WHERE phone is null;
+
+SELECT count(phone)
+  FROM customer;
+   
+   
+   
