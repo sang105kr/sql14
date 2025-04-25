@@ -31,7 +31,13 @@ INSERT INTO unique_test values('c5','c','c3');
 INSERT INTO unique_test values('c6','c','c3');
 COMMIT;
 
+SELECT name
+  FROM customer
+ where name LIKE '박세리'; 
 
+CREATE INDEX ix_customer_name ON customer(name);
+
+DROP INDEX ix_customer_name;
 
 
 
