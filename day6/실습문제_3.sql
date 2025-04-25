@@ -90,7 +90,41 @@ COMMIT;
 
 
 --8. ‘울산’에 사는 고객으로부터 주문을 받은 판매원의 이름과 나이를 보이시오(조인사용)
+	SELECT DISTINCT s.name "이름", s.age "나이"
+	  FROM SALESPERSON s INNER JOIN ORDERS o ON s.name = o.SALESPERSON
+	  									 INNER JOIN customer c ON c.NAME = o.CUSTNAME
+	 WHERE c.CITY = '울산';	  									 
+
 --9. 두 번 이상 주문을 받은 판매원의 이름을 보이시오
---10. 판매원 “홍길동”의 봉급을 45,000으로 변경하는 SQL문을 작성하시오
---11. 각 판매원별로 총 주문 금액을 계산하고, 판매원 이름과 총 주문 금액을 함께 조회하세요. 결과는 총 주문 금액을 기준으로 내림차순으로 정렬하고, 총 주문 금액이 500 이상인 판매원만 출력하세요.
---12. 각 고객별로 주문 횟수를 계산하고, 고객 이름과 주문 횟수를 함께 조회하세요. 단, 주문 횟수가 2회 이상인 고객만 출력하고, 결과는 주문 횟수를 기준으로 내림차순으로 정렬하세요.
+	SELECT o.SALESPERSON, count(*)
+	  FROM orders o
+GROUP by o.SALESPERSON
+	HAVING count(*) >= 2
+
+--10. 판매원 “홍길동1”의 봉급을 4,500,000으로 변경하는 SQL문을 작성하시오
+	UPDATE SALESPERSON 
+	   SET salay = 4500000
+	 WHERE name = '홍길동1'  ;
+  SELECT * FROM SALESPERSON;
+	COMMIT;
+
+--11. 각 판매원별로 총 주문 금액을 계산하고, 판매원 이름과 총 주문 금액을 함께 조회하세요. 
+--결과는 총 주문 금액을 기준으로 내림차순으로 정렬하고, 총 주문 금액이 500 만원 이상인 판매원만 출력하세요.
+	SELECT s.name, sum(o.AMOUNT)
+	  FROM SALESPERSON s INNER JOIN ORDERS o ON s.NAME = o.SALESPERSON
+GROUP BY s.name
+	HAVING sum(o.AMOUNT) >= 5000000
+ORDER BY sum(o.amount) desc;	  
+
+--12. 각 고객별로 주문 횟수를 계산하고, 고객 이름과 주문 횟수를 함께 조회하세요. 
+--단, 주문 횟수가 2회 이상인 고객만 출력하고, 결과는 주문 횟수를 기준으로 내림차순으로 정렬하세요.
+	SELECT c.NAME, count(*)
+	  FROM CUSTOMER c INNER JOIN ORDERS o ON c.NAME = o.CUSTNAME
+GROUP BY c.NAME	  
+  HAVING count(*) >= 2
+ORDER BY count(*) DESC;  
+
+
+
+
+
